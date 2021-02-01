@@ -1,0 +1,14 @@
+
+    {/* <View style={styles.header}>
+      <View style={styles.content}>
+        <View>
+          <Image
+            style={styles.logoHeader}
+            source={{uri: "https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"}}
+          />
+        </View>
+        <View>
+          <Text>Welcome</Text>
+        </View>
+      </View>
+    </View> */}
