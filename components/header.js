@@ -6,26 +6,6 @@ import { FavoriteBorder, Explore, Home } from '@material-ui/icons'
 const win = Dimensions.get('window');
 console.log('with of windos', win)
 
-const styles = StyleSheet.create({
-  header: {
-    marginTop: 35,
-    marginLeft: 10
-  },
-  content: {
-    //flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  logoHeader: {
-    width: 110,
-    height: 31
-  },
-  left: {
-    flexDirection: 'row',
-    top: -10,
-  }
-})
-
 const header = () => {
   return (
     <View style={styles.header}>
@@ -64,5 +44,25 @@ const header = () => {
 
   )
 }
+
+const styles = StyleSheet.create({
+  header: {
+    marginTop: 35,
+    marginLeft: 10
+  },
+  content: {
+    //flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  logoHeader: {
+    width: 110,
+    height: 31
+  },
+  left: {
+    flexDirection: 'row',
+    top: -10,
+  }
+})
 
 export default header

@@ -7,42 +7,7 @@ import { MoreHoriz, Edit, DeleteOutline } from '@material-ui/icons'
 const win = Dimensions.get('window')
 console.log(win)
 
-const styles = StyleSheet.create({
-  post: {
-    border: '1px solid lightgray',
-    width: 'fit-content',
-    marginBottom: 45,
-    backgroundColor: '#ffffff',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: 20,
-    paddingBottom: 20,
-    paddingLeft: 5,
-    borderBottom: '1px solid lightgray',
-  },
-  left: {
-    flexDirection: 'row',
-  },
-  right: {
-    color: '#212112',
-    marginRight: 5
-  },
-  image: {
-    flex: 1,
-    width: win.width,
-  },
-  caption: {
-    
-  },
-  comments: {
-
-  }
-})
-
 const Post = ({ postId, username, caption, imageUrl, /* filterPost */}) => {
-
   
   return (
     <View style={styles.post}>
@@ -81,5 +46,40 @@ const Post = ({ postId, username, caption, imageUrl, /* filterPost */}) => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  post: {
+    //border: '1px solid lightgray',
+    width: 'fit-content',
+    marginBottom: 45,
+    backgroundColor: '#ffffff', 
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 5,
+    //borderBottom: '1px solid lightgray',
+  },
+  left: {
+    flexDirection: 'row',
+  },
+  right: {
+    color: '#212112',
+    marginRight: 5
+  },
+  image: {
+    flex: 1,
+    width: win.width,
+  },
+  caption: {
+    
+  },
+  comments: {
+    padding: 10,
+    
+  }
+})
 
 export default Post

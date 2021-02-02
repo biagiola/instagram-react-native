@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, FlatList, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, FlatList, StyleSheet, Image, Dimensions } from 'react-native'
 ///import axios from '../../axios'
 import axios from 'axios'
 import { useStateValue } from '../StateProvider'
@@ -43,18 +43,6 @@ const Posts = () => {
   return (
     <View style={styles.posts}>
 
-      {/* {newPosts.length > 0 ? newPosts.map( response => (
-        <Post
-          key={response._id}
-          postId={response._id} 
-          username={response.user}
-          caption={response.caption}
-          imageUrl={response.image}
-          filterPost={ dato => handleFilter(dato) }
-        />
-        )) : ''
-      } */}
-
       <FlatList 
         keyExtractor={(item) => item._id}
         data={posts}
@@ -69,6 +57,18 @@ const Posts = () => {
           />  
         )}
       />
+
+      {/* {newPosts.length > 0 ? newPosts.map( response => (
+        <Post
+          key={response._id}
+          postId={response._id} 
+          username={response.user}
+          caption={response.caption}
+          imageUrl={response.image}
+          filterPost={ dato => handleFilter(dato) }
+        />
+        )) : ''
+      } */}
       
     </View>
   )
