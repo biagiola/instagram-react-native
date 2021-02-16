@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, Image, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Button, Alert, TouchableWithoutFeedback, Keyboard, Dimensions } from 'react-native'
 import AutoHeightImage from 'react-native-auto-height-image'
-import { Avatar, Menu, MenuItem, IconButton } from '@material-ui/core'
+import { Avatar } from 'react-native-paper'
+import { Menu, MenuItem, IconButton } from '@material-ui/core'
 import { MoreHoriz, Edit, DeleteOutline } from '@material-ui/icons'
+import { Feather } from '@expo/vector-icons'
 import { db } from '../firebase'
 import axios from 'axios'
 
 const win = Dimensions.get('window')
-console.log(win)
 
 const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
   const [anchorEl, setAnchorEl] = useState(null) 
   const [postDeleted, setPostDeleted] = useState(false)
-  const [comments, setComments] = useState([])
+  const [comments, setComments] = useState([]) // comming from db
+  const [comment, setcomment] = useState('') // new comment from GUI
 
   useEffect(() => {
     syncFeed()
@@ -35,6 +37,7 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
 
   // modal opens
   const handleClick = event => {
+    console.log('handleClick hola')
     setAnchorEl(event.currentTarget)
   }
   // modal close
@@ -43,7 +46,8 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
   }
 
   const handleDelete = () => {
-    axios.delete('http://localhost:9000/posts/delete/' + postId)
+    console.log('handleDelete hola')
+    axios.delete('http://192.168.100.52:9000/posts/delete/' + postId)
       .then( res => {
         console.log('article deleted!', res)
         //setPostDeleted(true)
@@ -51,6 +55,16 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
         setAnchorEl(false)
       })
       .catch(error => console.log('something went wrong!', error))
+  }
+
+  const handlePost = (e) => {
+    console.log('comment', comment)
+    console.log('hola', e.pageY)
+    console.log('handlePost e',e)
+  }
+
+  const handleComment = val => {
+    setcomment(val)
   }
   
   return (
@@ -61,7 +75,7 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
         {/* left */}
         <View style={styles.left}>
           <View style={styles.avatar}>
-            <Avatar alt={username} />
+            <Avatar.Text size={32} label={username[0].toUpperCase()} />
           </View>
           
           <View style={styles.name}>
@@ -71,29 +85,29 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
         {/* right */}
         <View style={styles.right}>
           <View style={styles.more}>
-          <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-            <MoreHoriz style={{ color: '#4d4d4d' }}/>
-          </IconButton>
+              <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={ handleClick }> 
+                <Feather name="more-horizontal" size={24} color="#4d4d4d" />
+              </IconButton>
           </View>
         </View>
       </View>
 
       <Menu
         id="simple-menu"
-        anchorEl={anchorEl}
+        anchorEl={ anchorEl }
         keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
+        open={ Boolean(anchorEl) }
+        onClose={ handleClose }
         MenuListProps={{ disablePadding: true }}
       >
-        <div onClick={handleDelete}>
+        <View onClick={ handleDelete }>
           <MenuItem pt={ 2 } pb={ 2 }>
             <DeleteOutline/>
             <View>
               <Text style={styles.delete}>Delete</Text>
             </View>
           </MenuItem>
-        </div>
+        </View>
       </Menu>
 
       {/* image */}
@@ -104,12 +118,11 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
         />
       </View>
 
-      {/* comments */}
+      {/* read comments */}
       <View style={styles.comments}>
         <View style={styles.caption}>
           <Text>{caption}</Text>  
         </View>
-
         <View style={styles.comments}>
           {comments.map( comment => 
             <View style={styles.caption} key={comment.id}>
@@ -124,17 +137,32 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
         </View>
       </View>
 
+      {/* add comments */}
+      <TouchableWithoutFeedback onPress={() => {
+        Keyboard.dismiss();
+        console.log('dismissed');
+      }}>
+        <View>
+          <form className='post__commentBox'>
+            <TextInput
+              style={{ height: 20, borderColor: 'gray', borderWidth: 1 }}
+              placeholder='Add new comment...'
+              onChangeText={ handleComment }
+              value={ comment }
+              onPress={ handlePost }
+            />
+          </form>
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   post: {
-    //border: '1px solid lightgray',
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: 'lightgray',
-    width: 'fit-content',
     marginBottom: 45,
     backgroundColor: '#ffffff', 
   },
@@ -144,7 +172,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 10,
     paddingLeft: 5,
-    //borderBottom: '1px solid lightgray',
   },
   left: {
     flexDirection: 'row',
@@ -154,14 +181,14 @@ const styles = StyleSheet.create({
   },
   name: {
     padding: 10,
-    paddingTop: 20 
+    paddingTop: 15 
   },
   right: {
     color: '#212112',
     marginRight: 5
   },
   more: {
-    paddingTop: 5,
+    paddingTop: 0,
   },
   moreIcon: {
     color: 'gray'
@@ -185,7 +212,7 @@ const styles = StyleSheet.create({
   caption: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'left',
+    justifyContent: 'flex-start',
     marginTop: 10
   },
   username: {
@@ -195,6 +222,9 @@ const styles = StyleSheet.create({
   comments: {
     padding: 10,
     
+  },
+  inputContainer: {
+
   }
 })
 

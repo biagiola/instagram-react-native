@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { View, FlatList, StyleSheet, Image, Dimensions } from 'react-native'
-///import axios from '../../axios'
-import axios from 'axios'
+import { View, FlatList, StyleSheet, Dimensions } from 'react-native'
+import Axios from 'axios'
 import { useStateValue } from '../StateProvider'
 import Post from './Post'
 
@@ -19,9 +18,9 @@ const Posts = () => {
   //const [{ userName, userEmail, newPosts }] = useStateValue()
 
   const syncFeed = () => {
-    axios.get('http://localhost:9000/posts/retrieve/')
+    Axios.get('http://192.168.100.52:9000/posts/retrieve/')
       .then(res => {
-        console.log(res.data)
+        console.log('res.data', res.data)
         setPosts(res.data)
       })
       .catch( err => console.log(err))
@@ -42,7 +41,6 @@ const Posts = () => {
 
   return (
     <View style={styles.posts}>
-
       <FlatList 
         keyExtractor={(item) => item._id}
         data={posts}

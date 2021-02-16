@@ -1,15 +1,14 @@
 import React from 'react'
 import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native'
-import { Avatar } from '@material-ui/core'
+import { Avatar } from 'react-native-paper'
 
 const story = ({ name, avatar }) => {
   return (
     <TouchableWithoutFeedback>
       <View style={styles.story}>
-        <Avatar 
-          src={ avatar }
-          style={{ border: ' 3px solid #DC5399', alignSelf: 'center'}}
-        />
+        <View style={styles.avatarBorder}>
+          <Avatar.Image size={32} source={avatar} />
+        </View>
         <Text style={styles.name}>{ name }</Text>
       </View>
     </TouchableWithoutFeedback>
@@ -18,11 +17,19 @@ const story = ({ name, avatar }) => {
 
 const styles = StyleSheet.create({
   story: {
-    margin: 5
+    margin: 5,
+    alignSelf: 'center',
+    alignItems: 'center'
+  },
+  avatarBorder: {
+    borderWidth: 2,
+    borderColor: '#E1306C',
+    borderStyle: 'solid',
+    borderRadius: 999
   },
   name: {
     alignSelf: 'center'
-  }
+  },
 })
 
 export default story

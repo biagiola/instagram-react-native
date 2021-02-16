@@ -41,7 +41,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     padding: 5,
-    //border: '1px solid lightgray'
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'lightgray'
   }
 })
 
