@@ -53,22 +53,10 @@ const Posts = () => {
             username={item.user}
             caption={item.caption}
             imageUrl={item.image}
-            //filterPost={ dato => handleFilter(dato) }
+            filterPost={ dato => handleFilter(dato) }
           />  
         )}
       />
-
-      {/* {newPosts.length > 0 ? newPosts.map( response => (
-        <Post
-          key={response._id}
-          postId={response._id} 
-          username={response.user}
-          caption={response.caption}
-          imageUrl={response.image}
-          filterPost={ dato => handleFilter(dato) }
-        />
-        )) : ''
-      } */}
       
     </View>
   )
