@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { View, FlatList, StyleSheet, Dimensions } from 'react-native'
 import Axios from 'axios'
 import { useStateValue } from '../StateProvider'
+import Stories from './stories'
 import Post from './Post'
 
-const win = Dimensions.get('window');
+const win = Dimensions.get('window')
 console.log(win)
 
 const styles = StyleSheet.create({
@@ -35,15 +36,13 @@ const Posts = () => {
   const handleFilter = (id) => {
     setPosts( posts.filter( postdata => (postdata._id !== id) ))
   }
-  
-  //console.log('posts are >>>', posts)
-  //console.log('newPosts are >>>', newPosts)
 
   return (
     <View style={styles.posts}>
       <FlatList 
         keyExtractor={(item) => item._id}
         data={posts}
+        ListHeaderComponent={Stories}
         renderItem={ ({item}) => (
           <Post
             key={item._id}

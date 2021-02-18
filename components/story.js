@@ -7,7 +7,7 @@ const story = ({ name, avatar }) => {
     <TouchableWithoutFeedback>
       <View style={styles.story}>
         <View style={styles.avatarBorder}>
-          <Avatar.Image size={32} source={avatar} />
+          <Avatar.Image size={32} source={{ uri: avatar}} />
         </View>
         <Text style={styles.name}>{ name }</Text>
       </View>

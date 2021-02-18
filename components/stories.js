@@ -37,13 +37,14 @@ const stories = () => {
 
 const styles = StyleSheet.create({
   storyReel: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     padding: 5,
+    marginBottom: 0,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: 'lightgray'
+    borderColor: 'lightgray',
+    borderBottomWidth: 0
   }
 })
 

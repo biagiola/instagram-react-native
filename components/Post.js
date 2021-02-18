@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, TextInput, Button, Alert, TouchableWithoutFeedback, Keyboard, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Button, Alert, TouchableNativeFeedback, TouchableOpacity, Dimensions } from 'react-native'
 import AutoHeightImage from 'react-native-auto-height-image'
 import { Avatar } from 'react-native-paper'
-import { Menu, MenuItem, IconButton } from '@material-ui/core'
-import { MoreHoriz, Edit, DeleteOutline } from '@material-ui/icons'
-import { Feather } from '@expo/vector-icons'
-import { db } from '../firebase'
+import Svg, { Circle } from 'react-native-svg'
+
+import firebase from '../firebase'
 import axios from 'axios'
 
 const win = Dimensions.get('window')
@@ -14,7 +13,7 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
   const [anchorEl, setAnchorEl] = useState(null) 
   const [postDeleted, setPostDeleted] = useState(false)
   const [comments, setComments] = useState([]) // comming from db
-  const [comment, setcomment] = useState('') // new comment from GUI
+  const [comment, setComment] = useState('') // new comment from GUI
 
   useEffect(() => {
     syncFeed()
@@ -23,7 +22,7 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
   const syncFeed = () => {
     if (postId) {
       // comments from db (firebase)
-      db
+      firebase.db
         .collection("posts")
         .doc(postId)
         .collection("comments")
@@ -63,15 +62,30 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
     console.log('handlePost e',e)
   }
 
-  const handleComment = val => {
-    setcomment(val)
+  const handleCommentSave = async() => {
+    console.log('onPress detected')
+    if(comment.length > 0) {
+      await firebase.db
+        .collection("posts")
+        .doc(postId)
+        .collection("comments").add({
+          id: Date.now(),
+          text: comment,
+          username: username // this must to come from reducer
+        })
+    }
   }
-  
+
+  const onPress = () => {
+    console.log('onPress works')
+  }
+
   return (
     <View style={styles.post}>
       
       {/* header */}
       <View style={styles.header}>
+        
         {/* left */}
         <View style={styles.left}>
           <View style={styles.avatar}>
@@ -82,33 +96,27 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
             <Text>{username}</Text>
           </View>
         </View>
+        
         {/* right */}
         <View style={styles.right}>
-          <View style={styles.more}>
-              <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={ handleClick }> 
-                <Feather name="more-horizontal" size={24} color="#4d4d4d" />
-              </IconButton>
+          {/* more vertical */}
+          <View style={{ borderRadius: 15, overflow: 'hidden' }}>
+            <TouchableNativeFeedback onPress={onPress}>
+              <View style={styles.moreVerticalButton}> 
+                <Svg 
+                  fill="#212121" 
+                  width={24} 
+                  height={24} 
+                  viewBox="0 0 24 24" 
+                  /* stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" */><Circle cx="12" cy="12" r="2"></Circle><Circle cx="12" cy="5" r="2"></Circle><Circle cx="12" cy="19" r="2"></Circle></Svg>
+              </View>
+            </TouchableNativeFeedback>
           </View>
         </View>
       </View>
-
-      <Menu
-        id="simple-menu"
-        anchorEl={ anchorEl }
-        keepMounted
-        open={ Boolean(anchorEl) }
-        onClose={ handleClose }
-        MenuListProps={{ disablePadding: true }}
-      >
-        <View onClick={ handleDelete }>
-          <MenuItem pt={ 2 } pb={ 2 }>
-            <DeleteOutline/>
-            <View>
-              <Text style={styles.delete}>Delete</Text>
-            </View>
-          </MenuItem>
-        </View>
-      </Menu>
 
       {/* image */}
       <View style={styles.image}>
@@ -138,22 +146,23 @@ const Post = ({ postId, username, caption, imageUrl, filterPost}) => {
       </View>
 
       {/* add comments */}
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss();
-        console.log('dismissed');
-      }}>
+      <View style={styles.addComment}>
         <View>
-          <form className='post__commentBox'>
-            <TextInput
-              style={{ height: 20, borderColor: 'gray', borderWidth: 1 }}
-              placeholder='Add new comment...'
-              onChangeText={ handleComment }
-              value={ comment }
-              onPress={ handlePost }
-            />
-          </form>
+          <TextInput
+            style={styles.inputComment}
+            placeholder='Add new comment...'
+            onChangeText={ value => setComment(value) }
+            value={ comment }
+            onPress={ handlePost }
+          />
         </View>
-      </TouchableWithoutFeedback>
+        <View style={ styles.button }>
+          <TouchableOpacity style={{ height: 100, marginTop: 10 }} onPress={() => handleCommentSave()}>
+            <Text style={{ color: '#999999'}}>POST</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
     </View>
   )
 }
@@ -184,14 +193,15 @@ const styles = StyleSheet.create({
     paddingTop: 15 
   },
   right: {
-    color: '#212112',
     marginRight: 5
   },
-  more: {
-    paddingTop: 0,
+  moreVertical: {
+    paddingTop: 10,
+    color: '#212121',
   },
-  moreIcon: {
-    color: 'gray'
+  moreVerticalButton: {
+    borderRadius: 999,
+    padding: 10,
   },
   menu: {
     paddingTop: '0',
@@ -221,10 +231,14 @@ const styles = StyleSheet.create({
   },
   comments: {
     padding: 10,
-    
   },
-  inputContainer: {
-
+  inputComment: {
+    height: 35,
+    width: win.width*0.85,
+    padding: 10,
+  },
+  addComment: {
+    flexDirection: 'row'
   }
 })
 
